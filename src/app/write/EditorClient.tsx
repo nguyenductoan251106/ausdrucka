@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { processImageUpload } from "../actions/ocrAction";
 import { Task } from "@/types";
 import { ChevronDown, ChevronUp, FileText, Upload, Sparkles } from "lucide-react";
+import ExamChart from "@/components/ui/ExamChart";
 
 export default function EditorClient() {
   const searchParams = useSearchParams();
@@ -117,12 +118,12 @@ export default function EditorClient() {
             {showTaskDetails ? (
               <>
                 <ChevronUp className="h-3.5 w-3.5 mr-1" />
-                Aufgabenstellung ausblenden
+                Aufgabenstellung & Grafik ausblenden
               </>
             ) : (
               <>
                 <ChevronDown className="h-3.5 w-3.5 mr-1" />
-                Aufgabenstellung einblenden
+                Aufgabenstellung & Grafik einblenden
               </>
             )}
           </Button>
@@ -131,18 +132,25 @@ export default function EditorClient() {
 
       {/* Collapsible Task Overview */}
       {task && showTaskDetails && (
-        <Card className="border-slate-200 bg-slate-50/70">
+        <Card className="border-slate-200 bg-slate-50/70 space-y-4">
           <CardContent className="p-5 space-y-4 text-sm text-slate-800">
             {task.situation && (
               <div>
-                <strong className="text-slate-900 block mb-1">Situation:</strong>
+                <strong className="text-slate-900 block mb-1">Situation & Kontext:</strong>
                 <p className="text-slate-700 leading-relaxed">{task.situation}</p>
+              </div>
+            )}
+
+            {/* Interaktive Grafik */}
+            {task.chart_data && (
+              <div className="pt-1">
+                <ExamChart chartData={task.chart_data} />
               </div>
             )}
 
             {task.materials && (
               <div className="p-3 bg-white rounded border border-blue-100 text-xs sm:text-sm whitespace-pre-wrap">
-                <strong className="text-blue-900 block mb-1">Materialien / Lesetext & Daten:</strong>
+                <strong className="text-blue-900 block mb-1">Materialien / Lesetext & Hintergrund:</strong>
                 <p className="text-slate-700">{task.materials}</p>
               </div>
             )}

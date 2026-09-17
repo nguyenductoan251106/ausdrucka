@@ -25,6 +25,19 @@ export interface ExamConfig {
   teile: ExamTeilConfig[];
 }
 
+export interface ChartSeries {
+  name: string;
+  values: number[];
+}
+
+export interface ChartData {
+  title: string;
+  source?: string;
+  unit: string;
+  categories: string[];
+  series: ChartSeries[];
+}
+
 export interface Task {
   id?: string;
   exam_id: ExamId;
@@ -36,6 +49,7 @@ export interface Task {
   topic: string;
   situation?: string; // Ausgangssituation / Kontext
   materials?: string; // Für TestDaF & DSH: Lesetext, Daten der Grafik, Zitate / Statements
+  chart_data?: ChartData; // Strukturierte Grafikdaten zum visuellen Zeichnen
   instructions: string;
   required_points: string[];
   target_word_count: number;

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Clock, FileText, Sparkles, BookOpen } from "lucide-react";
+import ExamChart from "@/components/ui/ExamChart";
 
 export default async function TaskPage({
   searchParams,
@@ -104,12 +105,22 @@ async function TaskContent({ examId, teilId }: { examId: ExamId; teilId: string 
             </div>
           )}
 
-          {/* Materialien (Lesetext, Grafik-Daten oder Zitate für TestDaF & DSH) */}
+          {/* Interaktive Grafik wenn chart_data vorhanden ist */}
+          {task.chart_data && (
+            <div className="space-y-2">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700">
+                Statistische Grafik zum Thema
+              </h3>
+              <ExamChart chartData={task.chart_data} />
+            </div>
+          )}
+
+          {/* Begleitende Materialien (Lesetext, Zitate etc.) */}
           {task.materials && (
             <div className="space-y-2">
               <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 flex items-center">
                 <BookOpen className="h-4 w-4 mr-1.5 text-blue-600" />
-                Vorgegebene Materialien (Lesetext & Daten)
+                Vorgegebene Materialien (Lesetext / Hintergrund)
               </h3>
               <div className="p-5 rounded-lg bg-blue-50/40 border border-blue-200 text-slate-800 text-sm sm:text-base leading-relaxed whitespace-pre-wrap font-sans">
                 {task.materials}
