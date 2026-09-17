@@ -8,12 +8,12 @@ export default function Home() {
         Ausdrucka
       </h1>
 
-      <p className="text-lg sm:text-xl font-medium text-slate-500 mb-8 tracking-wide">
+      <p className="text-lg sm:text-xl font-medium text-slate-500 mb-6 tracking-wide">
         Richtig? Natürlich.
       </p>
 
-      <p className="text-base sm:text-lg text-slate-600 mb-10 max-w-2xl leading-relaxed">
-        Verbessere deine deutschen Schreibfähigkeiten gezielt für offizielle Sprachprüfungen. Erhalte sofort detailliertes Feedback zu Grammatik, Wortschatz, Satzbau und Stil sowie offizielle Musterlösungen.
+      <p className="text-base sm:text-lg text-slate-600 mb-8 max-w-xl leading-relaxed">
+        Gezieltes Schreibtraining für deine Deutschprüfung – mit sofortiger Fehleranalyse und Musterlösung.
       </p>
       
       <Link href="/level">

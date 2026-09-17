@@ -7,27 +7,27 @@ export const EXAM_CONFIGS: Record<ExamId, ExamConfig> = {
     cefrLevel: "A1",
     fullName: "Goethe-Zertifikat A1: Start Deutsch 1",
     badge: "Goethe A1",
-    description: "Elementare Sprachverwendung: Formulare ausfüllen und kurze alltägliche Mitteilungen verfassen.",
+    description: "Formulare ausfüllen und kurze Alltagsmitteilungen schreiben.",
     teile: [
       {
         id: "teil-1",
         title: "Teil 1: Formular ausfüllen",
-        subtitle: "Informationen entnehmen & Formular ergänzen",
-        description: "Lies einen kurzen Informationstext und trage 5 fehlende Angaben in ein Formular ein.",
+        subtitle: "Formular ausfüllen",
+        description: "Wichtige Daten aus einem Text in ein Formular eintragen.",
         wordCount: "5 Angaben",
         targetWordCountNumber: 15,
-        timeLimit: "ca. 10 Minuten",
-        officialCriteria: ["Inhaltliche Richtigkeit (5 Punkte)", "Genauigkeit der Angaben"]
+        timeLimit: "ca. 10 Min.",
+        officialCriteria: ["Inhaltliche Richtigkeit (5 Punkte)", "Genauigkeit"]
       },
       {
         id: "teil-2",
-        title: "Teil 2: Kurze Mitteilung / E-Mail",
-        subtitle: "Persönliche Nachricht mit 3 Leitpunkten",
-        description: "Schreibe eine kurze E-Mail oder Nachricht (z. B. Einladung, Entschuldigung, Termin) an eine Person und gehe auf alle 3 Leitpunkte ein.",
+        title: "Teil 2: Kurze Mitteilung",
+        subtitle: "Mitteilung / E-Mail (ca. 30 Wörter)",
+        description: "Kurze Nachricht oder E-Mail zu 3 Leitpunkten schreiben.",
         wordCount: "ca. 30 Wörter",
         targetWordCountNumber: 35,
-        timeLimit: "ca. 15 Minuten",
-        officialCriteria: ["Berücksichtigung der 3 Leitpunkte", "Verständlichkeit & Wortschatz", "Elementare Grammatik"]
+        timeLimit: "ca. 15 Min.",
+        officialCriteria: ["3 Leitpunkte", "Verständlichkeit", "Grundgrammatik"]
       }
     ]
   },
@@ -37,27 +37,27 @@ export const EXAM_CONFIGS: Record<ExamId, ExamConfig> = {
     cefrLevel: "A2",
     fullName: "Goethe-Zertifikat A2",
     badge: "Goethe A2",
-    description: "Grundlegende Kenntnisse: Persönliche Mitteilungen und einfache geschäftliche/halbformelle E-Mails schreiben.",
+    description: "Persönliche Mitteilungen und einfache E-Mails verfassen.",
     teile: [
       {
         id: "teil-1",
         title: "Teil 1: Persönliche Kurznachricht",
-        subtitle: "Nachricht an Freunde / Bekannte",
-        description: "Schreibe eine kurze Nachricht (z. B. SMS oder Notiz) an eine befreundete Person und behandle dabei 3 vorgegebene Leitpunkte.",
+        subtitle: "SMS / Notiz (ca. 20–30 Wörter)",
+        description: "Kurze Nachricht an Freunde mit 3 Leitpunkten.",
         wordCount: "ca. 20–30 Wörter",
         targetWordCountNumber: 30,
-        timeLimit: "ca. 15 Minuten",
-        officialCriteria: ["Aufgabenbewältigung (3 Punkte)", "Verständlichkeit & Wortschatz", "Satzbau & Konnektoren (und, aber, weil)"]
+        timeLimit: "ca. 15 Min.",
+        officialCriteria: ["3 Leitpunkte", "Wortschatz", "Satzverbindungen"]
       },
       {
         id: "teil-2",
         title: "Teil 2: Halbformelle E-Mail",
-        subtitle: "E-Mail an Kursleiter, Vermieter oder Behörde",
-        description: "Verfasse eine höfliche kurze E-Mail (z. B. Termin absagen oder um Information bitten) unter Beachtung von Anrede, Grußformel und 3 Leitpunkten.",
+        subtitle: "E-Mail (ca. 30–40 Wörter)",
+        description: "Höfliche E-Mail für Alltag, Amt oder Beruf mit 3 Leitpunkten.",
         wordCount: "ca. 30–40 Wörter",
         targetWordCountNumber: 40,
-        timeLimit: "ca. 15 Minuten",
-        officialCriteria: ["Passende Anrede & Gruß", "Berücksichtigung aller 3 Leitpunkte", "Formale Korrektheit auf A2-Niveau"]
+        timeLimit: "ca. 15 Min.",
+        officialCriteria: ["Anrede & Gruß", "3 Leitpunkte", "Formale Richtigkeit"]
       }
     ]
   },
@@ -67,37 +67,37 @@ export const EXAM_CONFIGS: Record<ExamId, ExamConfig> = {
     cefrLevel: "B1",
     fullName: "Goethe-Zertifikat B1",
     badge: "Goethe B1",
-    description: "Selbstständige Sprachverwendung: Persönliche E-Mails, Forumsbeiträge und formelle Mitteilungen verfassen.",
+    description: "E-Mails, Forumsbeiträge und formelle Schreiben verfassen.",
     teile: [
       {
         id: "teil-1",
         title: "Teil 1: Persönliche E-Mail",
-        subtitle: "Erlebnis schildern & Vorschlag machen",
-        description: "Schreibe eine persönliche E-Mail an einen Freund/eine Freundin. Berichte von einem Erlebnis, begründe deine Gefühle und mache einen Vorschlag.",
+        subtitle: "Persönliche E-Mail (ca. 80 Wörter)",
+        description: "Über ein Erlebnis berichten und einen Vorschlag machen.",
         wordCount: "ca. 80 Wörter",
         targetWordCountNumber: 85,
-        timeLimit: "ca. 20 Minuten",
-        officialCriteria: ["Aufgabenbewältigung (alle 3 Leitpunkte)", "Kohärenz & Verknüpfungen (weil, da, obwohl)", "Wortschatz & grammatische Korrektheit"]
+        timeLimit: "ca. 20 Min.",
+        officialCriteria: ["3 Leitpunkte", "Kohärenz (weil, obwohl)", "Wortschatz"]
       },
       {
         id: "teil-2",
         title: "Teil 2: Forumsbeitrag",
-        subtitle: "Meinungsäußerung zu einem aktuellen Thema",
-        description: "Verfasse einen Diskussionsbeitrag in einem Online-Forum zu einem kontroversen Alltagsthema. Begründe deine eigene Meinung klar und nachvollziehbar.",
+        subtitle: "Meinungsäußerung (ca. 80 Wörter)",
+        description: "Eigene Meinung zu einem aktuellen Thema im Forum begründen.",
         wordCount: "ca. 80 Wörter",
         targetWordCountNumber: 85,
-        timeLimit: "ca. 25 Minuten",
-        officialCriteria: ["Klare eigene Meinungsdarstellung", "Stichhaltige Argumente & Beispiele", "Angemessene Forumssprache"]
+        timeLimit: "ca. 25 Min.",
+        officialCriteria: ["Meinungsdarstellung", "Argumente & Beispiele", "Forumssprache"]
       },
       {
         id: "teil-3",
         title: "Teil 3: Formelle E-Mail",
-        subtitle: "Höfliche Entschuldigung oder Anfrage",
-        description: "Schreibe eine formelle E-Mail an eine Respektsperson (z. B. Kursleiter/in oder Arbeitgeber), entschuldige dein Fehlen höflich und begründe es.",
+        subtitle: "Formelle Mitteilung (ca. 40 Wörter)",
+        description: "Höfliche Entschuldigung oder Bitte an Kursleiter/Vorgesetzte.",
         wordCount: "ca. 40 Wörter",
         targetWordCountNumber: 45,
-        timeLimit: "ca. 15 Minuten",
-        officialCriteria: ["Höflicher, formeller Tonfall (Siezen)", "Passende Grußformeln", "Präzise Begründung"]
+        timeLimit: "ca. 15 Min.",
+        officialCriteria: ["Formeller Ton (Sie)", "Grußformeln", "Präzise Begründung"]
       }
     ]
   },
@@ -107,27 +107,27 @@ export const EXAM_CONFIGS: Record<ExamId, ExamConfig> = {
     cefrLevel: "B2",
     fullName: "Goethe-Zertifikat B2",
     badge: "Goethe B2",
-    description: "Fortgeschrittene Sprachkompetenz: Detaillierte Forumsbeiträge mit Argumentation und formelle geschäftliche Mitteilungen.",
+    description: "Ausführliche Forumsbeiträge und formelle Korrespondenz.",
     teile: [
       {
         id: "teil-1",
-        title: "Teil 1: Diskussionsbeitrag im Forum",
-        subtitle: "Umfassende Stellungnahme mit 4 Leitpunkten",
-        description: "Schreibe einen differenzierten Beitrag für ein Online-Forum zu einem gesellschaftlichen Thema. Äußere deine Meinung, nenne Gründe, nenne Alternativen und bewerte Vor- und Nachteile.",
+        title: "Teil 1: Diskussionsbeitrag",
+        subtitle: "Forumsbeitrag (ca. 150 Wörter)",
+        description: "Differenzierte Stellungnahme mit Argumenten, Alternativen und Wertung.",
         wordCount: "ca. 150 Wörter",
         targetWordCountNumber: 155,
-        timeLimit: "ca. 45 Minuten",
-        officialCriteria: ["Vollständige Bearbeitung aller 4 Leitpunkte", "Textaufbau, Überleitungen & Kohärenz", "Differenzierter B2-Wortschatz & Satzstrukturen"]
+        timeLimit: "ca. 45 Min.",
+        officialCriteria: ["4 Leitpunkte", "Textaufbau & Kohärenz", "Differenzierter Wortschatz"]
       },
       {
         id: "teil-2",
-        title: "Teil 2: Formelle Nachricht / Beschwerde",
-        subtitle: "Offizielle Mitteilung, Bitte oder Reklamation",
-        description: "Verfasse eine formelle E-Mail oder einen formellen Brief im beruflichen/geschäftlichen Kontext (z. B. Bitte um Information, Beschwerde oder Stellungnahme).",
+        title: "Teil 2: Formelle Nachricht",
+        subtitle: "Offizielles Schreiben (ca. 100 Wörter)",
+        description: "Schriftliche Bitte, Beschwerde oder Auskunftsanfrage.",
         wordCount: "ca. 100 Wörter",
         targetWordCountNumber: 105,
-        timeLimit: "ca. 30 Minuten",
-        officialCriteria: ["Angemessenes Register & Höflichkeitskonventionen", "Klare Gliederung & Begründungen", "Präziser formeller Wortschatz"]
+        timeLimit: "ca. 30 Min.",
+        officialCriteria: ["Höflichkeitsform", "Klare Gliederung", "Präziser Wortschatz"]
       }
     ]
   },
@@ -137,27 +137,27 @@ export const EXAM_CONFIGS: Record<ExamId, ExamConfig> = {
     cefrLevel: "B2-C1",
     fullName: "Digitaler TestDaF: Prüfungsteil Schreiben",
     badge: "TestDaF",
-    description: "Akademischer Hochschulzugang (TDN 3–5): Argumentative Texte im universitären Kontext verfassen und wissenschaftliche Daten zusammenfassen.",
+    description: "Wissenschaftliche Texte und Datenauswertungen für das Studium.",
     teile: [
       {
         id: "teil-1",
-        title: "Aufgabentyp 1: Argumentativen Text schreiben",
-        subtitle: "Diskussion auf einer universitären Lernplattform",
-        description: "Diskutiere in einem universitären Forum mit Dozenten und Studierenden über ein wissenschaftliches oder gesellschaftliches Thema. Erläutere und begründe Pro- und Contra-Aspekte ausführlich.",
-        wordCount: "mindestens 200 Wörter",
+        title: "Aufgabentyp 1: Argumentativer Text",
+        subtitle: "Diskussion im Seminar (mind. 200 Wörter)",
+        description: "Vor- und Nachteile zu einem universitären Thema begründet abwägen.",
+        wordCount: "mind. 200 Wörter",
         targetWordCountNumber: 220,
-        timeLimit: "30 Minuten",
-        officialCriteria: ["Vollständige Erläuterung & Begründung von Vor- und Nachteilen", "Akademische Argumentationsstruktur & roter Faden", "Differenzierter wissenschaftssprachlicher Wortschatz"]
+        timeLimit: "30 Min.",
+        officialCriteria: ["Argumentation & Begründung", "Roter Faden", "Wissenschaftssprache"]
       },
       {
         id: "teil-2",
-        title: "Aufgabentyp 2: Lesetext und Grafik zusammenfassen",
-        subtitle: "Synthese wissenschaftlicher Daten und Fakten",
-        description: "Fasse für eine wissenschaftliche Hausarbeit die Ursachen und Folgen eines Phänomens anhand des Lesetextes und der beigefügten Grafik in eigenen Worten zusammen (ohne abzuschreiben).",
+        title: "Aufgabentyp 2: Text & Grafik zusammenfassen",
+        subtitle: "Datensynthese (ca. 100–150 Wörter)",
+        description: "Wissenschaftlichen Lesetext und Grafik in eigenen Worten zusammenfassen.",
         wordCount: "ca. 100–150 Wörter",
         targetWordCountNumber: 130,
-        timeLimit: "30 Minuten",
-        officialCriteria: ["Eigenständige Formulierung (kein Abschreiben)", "Korrekte Zusammenfassung von Textursachen & Grafikdaten", "Sachlicher, präziser Wissenschaftsstil"]
+        timeLimit: "30 Min.",
+        officialCriteria: ["Eigenständige Formulierungen", "Fakten & Daten", "Sachlicher Stil"]
       }
     ]
   },
@@ -165,40 +165,40 @@ export const EXAM_CONFIGS: Record<ExamId, ExamConfig> = {
     id: "dsh",
     name: "DSH",
     cefrLevel: "C1",
-    fullName: "Deutsche Sprachprüfung für den Hochschulzugang: Textproduktion",
+    fullName: "Deutsche Sprachprüfung für den Hochschulzugang",
     badge: "DSH",
-    description: "Universitäre Hochschulprüfung (DSH 1–3): Strukturierte akademische Sachtexte mit Grafikbezug, Pro/Contra-Argumentation und fundierter Stellungnahme.",
+    description: "Akademische Textproduktion mit Grafik und Stellungnahme.",
     teile: [
       {
         id: "teil-1",
-        title: "Textproduktion: Sachtext mit Grafik & Stellungnahme",
-        subtitle: "Auswertung, wissenschaftliche Argumentation & Fazit",
-        description: "Verfasse einen akademischen Sachtext: Einleitung zum Thema, präzise Beschreibung und Interpretation der statistischen Grafik, differenzierte Pro/Contra-Argumentation und begründete persönliche Stellungnahme.",
-        wordCount: "ca. 250 Wörter (mind. 200)",
+        title: "Textproduktion: Sachtext mit Grafik",
+        subtitle: "Grafik & Argumentation (ca. 250 Wörter)",
+        description: "Grafikbeschreibung, Pro/Contra-Argumentation und eigenes Fazit.",
+        wordCount: "ca. 250 Wörter",
         targetWordCountNumber: 260,
-        timeLimit: "ca. 70 Minuten",
+        timeLimit: "ca. 70 Min.",
         officialCriteria: [
-          "Inhalt & Aufgabenstellung (22 Punkte)",
-          "Textaufbau & Kohärenz (12 Punkte)",
-          "Formale Richtigkeit: Morphologie, Syntax, Rektion (30 Punkte)",
-          "Orthographie & Zeichensetzung (4 Punkte)",
-          "Ausdrucksvermögen & Wissenschaftssprache (20 Punkte)",
-          "Kohäsion & Konnektoren (12 Punkte)"
+          "Inhalt (22 P.)",
+          "Textaufbau (12 P.)",
+          "Grammatik (30 P.)",
+          "Ausdruck (20 P.)",
+          "Kohäsion (12 P.)",
+          "Rechtschreibung (4 P.)"
         ]
       },
       {
         id: "teil-2",
-        title: "Textproduktion: Argumentation zu kontroversen Statements",
-        subtitle: "Diskussion gesellschaftlicher Thesen & eigene Position",
-        description: "Analysiere gegebene Statements und kontroverse Zitate zu einem Bildungsthema oder gesellschaftspolitischen Thema. Entwickle eine ausgewogene Argumentation und nimm fundiert Stellung.",
-        wordCount: "ca. 250 Wörter (mind. 200)",
+        title: "Textproduktion: Thesen-Diskussion",
+        subtitle: "Statements erörtern (ca. 250 Wörter)",
+        description: "Kontroverse Zitate analysieren, argumentieren und Stellung nehmen.",
+        wordCount: "ca. 250 Wörter",
         targetWordCountNumber: 260,
-        timeLimit: "ca. 70 Minuten",
+        timeLimit: "ca. 70 Min.",
         officialCriteria: [
-          "Bezugnahme auf die vorgegebenen Zitate/Statements",
-          "Logische Gedankenführung ('roter Faden')",
-          "Komplexe Satzstrukturen (Passiv, Partizipien, Substantivierungen)",
-          "DSH-Punktebewertung (max. 100 Punkte -> DSH 1, 2 oder 3)"
+          "Bezug zu Zitaten",
+          "Gedankenführung",
+          "Komplexe Syntax",
+          "DSH 1 / 2 / 3 Bewertung"
         ]
       }
     ]
