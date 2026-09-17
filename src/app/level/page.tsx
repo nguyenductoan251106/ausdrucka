@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Button } from "@/components/ui/button";
 import { EXAM_CONFIGS, EXAM_LIST } from "@/lib/examConfig";
 import { ExamId } from "@/types";
-import { ArrowRight, ArrowLeft, Clock, FileText, CheckCircle2 } from "lucide-react";
+import { ArrowRight, ArrowLeft, Clock, FileText, CheckCircle2, BarChart2 } from "lucide-react";
 
 export default async function LevelSelection({
   searchParams,
@@ -47,63 +47,73 @@ export default async function LevelSelection({
         </div>
 
         <div className="grid grid-cols-1 gap-4">
-          {activeExam.teile.map((teil) => (
-            <Card 
-              key={teil.id}
-              className="border-slate-200 hover:border-slate-400 hover:shadow-sm transition-all duration-200 bg-white overflow-hidden"
-            >
-              <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
-                <div className="space-y-2 flex-1">
-                  <div className="flex flex-wrap items-center gap-2.5">
-                    <span className="font-semibold text-slate-900 text-lg">
-                      {teil.title}
-                    </span>
-                    <span className="text-xs px-2.5 py-0.5 rounded-md bg-slate-100 font-medium text-slate-700 border border-slate-200">
-                      {teil.subtitle}
-                    </span>
-                  </div>
+          {activeExam.teile.map((teil) => {
+            const hasGrafik = (activeExam.id === 'testdaf' && teil.id === 'teil-2') || (activeExam.id === 'dsh' && teil.id === 'teil-1');
 
-                  <p className="text-slate-600 text-sm leading-relaxed">
-                    {teil.description}
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-500 pt-1">
-                    <span className="inline-flex items-center">
-                      <FileText className="h-3.5 w-3.5 mr-1 text-slate-400" />
-                      Umfang: <strong className="ml-1 text-slate-700">{teil.wordCount}</strong>
-                    </span>
-                    <span className="inline-flex items-center">
-                      <Clock className="h-3.5 w-3.5 mr-1 text-slate-400" />
-                      Zeit: <strong className="ml-1 text-slate-700">{teil.timeLimit}</strong>
-                    </span>
-                  </div>
-
-                  <div className="pt-1.5">
-                    <div className="flex flex-wrap gap-1.5">
-                      {teil.officialCriteria.map((crit, idx) => (
-                        <span key={idx} className="inline-flex items-center text-[11px] text-slate-600 bg-slate-50 px-2 py-0.5 rounded border border-slate-100">
-                          <CheckCircle2 className="h-3 w-3 mr-1 text-slate-400" />
-                          {crit}
+            return (
+              <Card 
+                key={teil.id}
+                className="border-slate-200 hover:border-slate-400 hover:shadow-sm transition-all duration-200 bg-white overflow-hidden"
+              >
+                <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
+                  <div className="space-y-2 flex-1">
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <span className="font-semibold text-slate-900 text-lg">
+                        {teil.title}
+                      </span>
+                      <span className="text-xs px-2.5 py-0.5 rounded-md bg-slate-100 font-medium text-slate-700 border border-slate-200">
+                        {teil.subtitle}
+                      </span>
+                      {hasGrafik && (
+                        <span className="text-xs px-2.5 py-0.5 rounded-md bg-blue-50 font-bold text-blue-700 border border-blue-200 inline-flex items-center gap-1">
+                          <BarChart2 className="h-3.5 w-3.5" />
+                          Mit Grafik
                         </span>
-                      ))}
+                      )}
+                    </div>
+
+                    <p className="text-slate-600 text-sm leading-relaxed">
+                      {teil.description}
+                    </p>
+
+                    <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-500 pt-1">
+                      <span className="inline-flex items-center">
+                        <FileText className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                        Umfang: <strong className="ml-1 text-slate-700">{teil.wordCount}</strong>
+                      </span>
+                      <span className="inline-flex items-center">
+                        <Clock className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                        Zeit: <strong className="ml-1 text-slate-700">{teil.timeLimit}</strong>
+                      </span>
+                    </div>
+
+                    <div className="pt-1.5">
+                      <div className="flex flex-wrap gap-1.5">
+                        {teil.officialCriteria.map((crit, idx) => (
+                          <span key={idx} className="inline-flex items-center text-[11px] text-slate-600 bg-slate-50 px-2 py-0.5 rounded border border-slate-100">
+                            <CheckCircle2 className="h-3 w-3 mr-1 text-slate-400" />
+                            {crit}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="md:self-center shrink-0">
-                  <Link href={`/task?exam=${activeExam.id}&teil=${teil.id}`}>
-                    <Button 
-                      size="default"
-                      className="w-full md:w-auto font-medium text-sm px-5 bg-slate-900 hover:bg-slate-800 text-white"
-                    >
-                      <span>Teil starten</span>
-                      <ArrowRight className="h-4 w-4 ml-1.5" />
-                    </Button>
-                  </Link>
+                  <div className="md:self-center shrink-0">
+                    <Link href={`/task?exam=${activeExam.id}&teil=${teil.id}`}>
+                      <Button 
+                        size="default"
+                        className="w-full md:w-auto font-medium text-sm px-5 bg-slate-900 hover:bg-slate-800 text-white"
+                      >
+                        <span>Teil starten</span>
+                        <ArrowRight className="h-4 w-4 ml-1.5" />
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
       </div>
     );

@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type, Schema } from '@google/genai';
-import { ExamId, Task } from '@/types';
+import { ChartData, ExamId, Task } from '@/types';
 import { EXAM_CONFIGS } from '@/lib/examConfig';
 
 const ai = new GoogleGenAI({});
@@ -20,26 +20,26 @@ const taskSchema: Schema = {
     },
     materials: { 
       type: Type.STRING, 
-      description: "Für TestDaF oder DSH: Detaillierter Lesetext, genaue Fakten/Zahlen einer statistischen Grafik oder kontroverse Zitate/Statements." 
+      description: "Für TestDaF oder DSH: Detaillierter wissenschaftlicher Lesetext mit Ursachen/Hintergründen." 
     },
     chart_data: {
       type: Type.OBJECT,
       description: "MUSS für TestDaF Aufgabentyp 2 und DSH Teil 1 (Sachtext mit Grafik) ausgefüllt werden! Enthält die Daten für das interaktive Balkendiagramm.",
       properties: {
-        title: { type: Type.STRING, description: "Titel der Grafik, z.B. 'Erträge mit und ohne Bienenbestäubung (in %)' oder 'Anteil von Sprachen in der Wissenschaft (in %)'" },
-        source: { type: Type.STRING, description: "Quelle der Daten, z.B. 'Quelle: Statistisches Bundesamt' oder 'Quelle: Wissenschaftsrat'" },
+        title: { type: Type.STRING, description: "Titel der Grafik, z.B. 'Erträge mit und ohne Bienenbestäubung (in %)'" },
+        source: { type: Type.STRING, description: "Quelle der Daten, z.B. 'Quelle: Statistisches Bundesamt' oder 'Quelle: Deutscher Imkerbund'" },
         unit: { type: Type.STRING, description: "Einheit der Werte, meist '%'" },
         categories: { 
           type: Type.ARRAY, 
           items: { type: Type.STRING }, 
-          description: "4 bis 6 Balkenkategorien (z.B. ['Apfel', 'Birne', 'Kirsche', 'Bohne', 'Möhre'] oder ['1920', '1960', '1990', '2020'])" 
+          description: "4 bis 5 Balkenkategorien (z.B. ['Apfel', 'Birne', 'Kirsche', 'Bohne', 'Möhre'] oder ['1920', '1960', '1990', '2020'])" 
         },
         series: {
           type: Type.ARRAY,
           items: {
             type: Type.OBJECT,
             properties: {
-              name: { type: Type.STRING, description: "Name der Datenreihe (z.B. 'Mit Bestäubung', 'Ohne Bestäubung' oder 'Englisch', 'Deutsch')" },
+              name: { type: Type.STRING, description: "Name der Datenreihe (z.B. 'Mit Bestäubung', 'Ohne Bestäubung')" },
               values: { 
                 type: Type.ARRAY, 
                 items: { type: Type.INTEGER },
@@ -80,6 +80,29 @@ const taskSchema: Schema = {
 
 const candidateModels = ['gemini-3.6-flash', 'gemini-3.5-flash'];
 
+const DEFAULT_TESTDAF_CHART: ChartData = {
+  title: "Erträge mit und ohne Bienenbestäubung bei ausgewählten Nutzpflanzen",
+  source: "Quelle: Deutscher Imkerbund e. V. / Landesinstitut für Bienenkunde",
+  unit: "%",
+  categories: ["Apfel", "Birne", "Kirsche", "Bohne", "Möhre"],
+  series: [
+    { name: "Mit Bestäubung", values: [100, 100, 100, 100, 100] },
+    { name: "Ohne Bestäubung", values: [40, 10, 40, 60, 5] }
+  ]
+};
+
+const DEFAULT_DSH_CHART: ChartData = {
+  title: "Anteil von Sprachen in wissenschaftlichen Publikationen (1880–2000)",
+  source: "Quelle: Ammon 2010; hsi-monitor.de / DAAD",
+  unit: "%",
+  categories: ["1880", "1920", "1960", "2000"],
+  series: [
+    { name: "Englisch", values: [38, 33, 50, 92] },
+    { name: "Deutsch", values: [25, 45, 18, 2] },
+    { name: "Andere Sprachen", values: [37, 22, 32, 6] }
+  ]
+};
+
 export async function generateExamWritingTask(
   examId: ExamId, 
   teilId: string
@@ -101,10 +124,10 @@ Offizielle Bewertungskriterien: ${teilConfig.officialCriteria.join(", ")}
 
 ${hasGrafik ? `
 ACHTUNG - DIESE AUFGABE BENÖTIGT EINE STATISTISCHE GRAFIK:
-Du MUSST das Feld "chart_data" vollständig ausfüllen!
+Du MUSST das Feld "chart_data" vollständig mit realistischen Daten ausfüllen!
 - Erstelle ein realistisches Balkendiagramm mit 4 bis 5 Kategorien.
-- Enthält 1 bis 2 vergleichbare Datenreihen (z.B. 'Mit Bestäubung' vs. 'Ohne Bestäubung' oder 'Bachelor' vs. 'Master' oder '2010' vs. '2024').
-- Gib im Feld "materials" den begleitenden wissenschaftlichen Lesetext an, der die Ursachen und Hintergründe des Themas erklärt.
+- Enthält 1 bis 2 vergleichbare Datenreihen (z.B. 'Mit Bestäubung' vs. 'Ohne Bestäubung' oder 'Bachelor' vs. 'Master').
+- Gib im Feld "materials" den begleitenden wissenschaftlichen Lesetext an (mindestens 120 Wörter), der Ursachen und Fakten erklärt.
 ` : ""}
 
 Format-Spezifikationen nach Prüfungsordnung:
@@ -122,7 +145,7 @@ Format-Spezifikationen nach Prüfungsordnung:
   - Teil 1: Forumsbeitrag zu einem aktuellen gesellschaftlichen Thema. Genau 4 Leitpunkte: 1. Meinung äußern, 2. Gründe für die eigene Meinung nennen, 3. Alternativen nennen, 4. Vor- oder Nachteile einer Alternative bewerten (ca. 150 Wörter).
   - Teil 2: Formelle Nachricht / geschäftliche E-Mail (z.B. Bitte um Auskunft, Beschwerde oder Reklamation) mit genauer Einleitung, Darstellung der Situation und Bitte um Lösung (ca. 100 Wörter).
 - TestDaF:
-  - Aufgabentyp 1: Diskussionsbeitrag auf der universitären Lernplattform. Ein Seminar mit Dozent und Kommilitonen zu einem akademischen Thema (z.B. berufliche Mobilität, Fernstudium, künstliche Intelligenz). Aufgabe: Vor- und Nachteile ausführlich für zwei Seiten (z.B. Arbeitnehmer & Unternehmen) erläutern und begründen, eigene Position beziehen (mindestens 200 Wörter).
+  - Aufgabentyp 1: Diskussionsbeitrag auf der universitären Lernplattform. Ein Seminar mit Dozent und Kommilitonen zu einem akademischen Thema (z.B. berufliche Mobilität, Fernstudium, künstliche Intelligenz). Aufgabe: Vor- und Nachteile ausführlich für zwei Seiten erläutern und begründen (mindestens 200 Wörter).
   - Aufgabentyp 2: Lesetext und Grafik zusammenfassen (z.B. Thema Bienensterben, Plastikmüll, Erneuerbare Energien). 
     * Fülle "chart_data" mit konkreten Prozentwerten.
     * Gib im Feld "materials" den wissenschaftlichen Lesetext an (Ursachen).
@@ -130,9 +153,9 @@ Format-Spezifikationen nach Prüfungsordnung:
 - DSH (Deutsche Sprachprüfung für den Hochschulzugang):
   - Textproduktion auf akademischem C1-Niveau (ca. 250 Wörter).
   - Teil 1: Sachtext mit Grafik & Stellungnahme. 
-    * Fülle "chart_data" mit konkreten statistischen Daten (z.B. Sprachen in wissenschaftlichen Publikationen, Entwicklung von Studiengebühren oder Online-Lehre).
+    * Fülle "chart_data" mit konkreten statistischen Daten (z.B. Sprachen in wissenschaftlichen Publikationen, Studiengebühren, Digitalisierung der Lehre).
     * Aufgabe verlangt: 1. Einleitung mit Thema & Grafikbeschreibung, 2. Differenzierte Pro/Contra-Argumentation, 3. Eigene begründete Stellungnahme als Schlusspunkt.
-  - Teil 2: Argumentativer Sachtext zu kontroversen Statements. Gib im Feld "materials" 2 bis 3 gegensätzliche Experten-Statements/Zitate an (z.B. zu Privatschulen, Lehrerbenotung, Künstliche Intelligenz an Universitäten). Aufgabe verlangt argumentative Diskussion und persönliche Stellungnahme.
+  - Teil 2: Argumentativer Sachtext zu kontroversen Statements. Gib im Feld "materials" 2 bis 3 gegensätzliche Experten-Statements/Zitate an (z.B. Privatschulen, Benotung von Lehrern).
 
 Gib alle Ausgaben auf Deutsch und halte dich strikt an das JSON-Schema.
 `;
@@ -153,8 +176,16 @@ Gib alle Ausgaben auf Deutsch und halte dich strikt an das JSON-Schema.
 
       if (response.text) {
         const parsed = JSON.parse(response.text) as Task;
+
+        // Ensure chart_data is ALWAYS present for tasks that require a graphic
+        let finalChartData = parsed.chart_data;
+        if (hasGrafik && (!finalChartData || !finalChartData.categories || finalChartData.categories.length === 0)) {
+          finalChartData = examId === 'testdaf' ? DEFAULT_TESTDAF_CHART : DEFAULT_DSH_CHART;
+        }
+
         return {
           ...parsed,
+          chart_data: finalChartData,
           exam_id: examId,
           teil_id: teilId,
           exam_name: examConfig.name,
@@ -168,6 +199,34 @@ Gib alle Ausgaben auf Deutsch und halte dich strikt an das JSON-Schema.
       lastError = error;
       await new Promise((res) => setTimeout(res, 1000));
     }
+  }
+
+  // If AI call failed, return guaranteed template with chart for TestDaF & DSH
+  if (hasGrafik) {
+    return {
+      exam_id: examId,
+      teil_id: teilId,
+      exam_name: examConfig.name,
+      teil_title: teilConfig.title,
+      level: examConfig.cefrLevel,
+      type: "sachtext",
+      topic: examId === 'testdaf' ? "Bienensterben und seine Folgen" : "Englisch als Wissenschafts- und Unterrichtssprache",
+      situation: examId === 'testdaf' 
+        ? "In Ihrem Seminar für Umweltwissenschaften schreiben Sie eine Hausarbeit zum Thema 'Bienensterben'."
+        : "Deutsch war früher in der Wissenschaft eine Weltsprache. Heutzutage dominiert Englisch zunehmend in Publikationen und Lehre.",
+      materials: examId === 'testdaf'
+        ? "Sie sind winzig, doch sie leisten Großes. Bienen bestäuben Wild- und Nutzpflanzen. Doch der Bestand vieler Bienenvölker ist bedroht. Gründe sind Monokulturen in der Landwirtschaft sowie der massive Einsatz von Pestiziden, die das Nervensystem der Insekten schädigen."
+        : "Nicht nur in der Forschung, auch in der Hochschullehre verbreitet sich Englisch rapide. An vielen deutschen Universitäten steigt der Anteil englischsprachiger Masterstudiengänge rasant an.",
+      chart_data: examId === 'testdaf' ? DEFAULT_TESTDAF_CHART : DEFAULT_DSH_CHART,
+      instructions: examId === 'testdaf'
+        ? "Fassen Sie Informationen aus dem Text und der Grafik in eigenen Worten zusammen (ca. 100–150 Wörter)."
+        : "Verfassen Sie einen argumentativen Sachtext von ca. 250 Wörtern: Einleitung mit Grafikbeschreibung, Pro- und Contra-Argumentation und persönliche Stellungnahme.",
+      required_points: examId === 'testdaf'
+        ? ["Ursachen des Bienensterbens aus dem Text nennen", "Folgen für Ernteerträge anhand der Grafik beschreiben", "Eigene Formulierungen benutzen"]
+        : ["Thema und Grafik beschreiben", "Vorteile und Nachteile von Englisch an Hochschulen", "Eigene begründete Stellungnahme"],
+      target_word_count: examId === 'testdaf' ? 130 : 250,
+      time_limit: teilConfig.timeLimit
+    };
   }
 
   throw lastError || new Error("Prüfungsaufgabe konnte nicht generiert werden.");
