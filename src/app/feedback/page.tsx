@@ -8,7 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CheckCircle2, Award, BookCheck, ArrowLeft, RefreshCw } from "lucide-react";
+import { CheckCircle2, Award, BookCheck, ArrowLeft, RefreshCw, GraduationCap, Trophy } from "lucide-react";
 import Link from "next/link";
 
 interface SubmissionStorageData {
@@ -93,6 +93,8 @@ export default function FeedbackPage() {
   }
 
   const dsh = feedback.dsh_breakdown;
+  const goethe = feedback.goethe_breakdown;
+  const testdaf = feedback.testdaf_breakdown;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 pb-16 space-y-8">
@@ -121,7 +123,7 @@ export default function FeedbackPage() {
         </p>
       </div>
 
-      {/* DSH Specific Score Sheet if DSH Exam */}
+      {/* 1. DSH Score Sheet */}
       {dsh && (
         <Card className="border-blue-200 bg-blue-50/20 shadow-sm overflow-hidden">
           <CardHeader className="bg-blue-50/80 border-b border-blue-100 py-4">
@@ -175,6 +177,85 @@ export default function FeedbackPage() {
             <div className="p-4 bg-slate-900 text-white rounded-lg flex items-center justify-between font-semibold text-base">
               <span>Gesamtpunktzahl DSH:</span>
               <span className="text-xl font-bold">{dsh.gesamt_punkte} / 100 Punkte ({dsh.dsh_stufe})</span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* 2. Goethe Score Sheet */}
+      {goethe && (
+        <Card className="border-indigo-200 bg-indigo-50/20 shadow-sm overflow-hidden">
+          <CardHeader className="bg-indigo-50/80 border-b border-indigo-100 py-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <Trophy className="h-6 w-6 text-indigo-700" />
+                <CardTitle className="text-xl font-bold text-indigo-950">
+                  Offizielle Goethe-Bewertung
+                </CardTitle>
+              </div>
+              <div className="px-3.5 py-1 rounded-full text-sm font-bold bg-indigo-700 text-white self-start sm:self-auto">
+                {goethe.bestehen_status}
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+              <div className="p-3 bg-white rounded-lg border border-slate-200 text-center">
+                <div className="text-xs text-slate-500 font-medium">Aufgabenbezug</div>
+                <div className="text-lg font-bold text-slate-900 mt-1">{goethe.aufgabenbewaeltigung} P.</div>
+              </div>
+              <div className="p-3 bg-white rounded-lg border border-slate-200 text-center">
+                <div className="text-xs text-slate-500 font-medium">Kohärenz</div>
+                <div className="text-lg font-bold text-slate-900 mt-1">{goethe.kohaerenz} P.</div>
+              </div>
+              <div className="p-3 bg-white rounded-lg border border-slate-200 text-center">
+                <div className="text-xs text-slate-500 font-medium">Wortschatz</div>
+                <div className="text-lg font-bold text-slate-900 mt-1">{goethe.wortschatz} P.</div>
+              </div>
+              <div className="p-3 bg-white rounded-lg border border-slate-200 text-center">
+                <div className="text-xs text-slate-500 font-medium">Strukturen</div>
+                <div className="text-lg font-bold text-slate-900 mt-1">{goethe.strukturen} P.</div>
+              </div>
+            </div>
+
+            <div className="p-4 bg-slate-900 text-white rounded-lg flex items-center justify-between font-semibold text-base">
+              <span>Erreichte Punkte für diesen Teil:</span>
+              <span className="text-xl font-bold">
+                {goethe.teil_punkte_erreicht} / {goethe.teil_punkte_maximal} Punkte
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* 3. TestDaF Score Sheet */}
+      {testdaf && (
+        <Card className="border-teal-200 bg-teal-50/20 shadow-sm overflow-hidden">
+          <CardHeader className="bg-teal-50/80 border-b border-teal-100 py-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <GraduationCap className="h-6 w-6 text-teal-700" />
+                <CardTitle className="text-xl font-bold text-teal-950">
+                  Offizielle TestDaF-Einstufung (TDN)
+                </CardTitle>
+              </div>
+              <div className="px-3.5 py-1 rounded-full text-sm font-bold bg-teal-800 text-white self-start sm:self-auto">
+                {testdaf.tdn_stufe}
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="p-6 space-y-3">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200 text-sm">
+              <strong className="text-slate-900 block mb-0.5">Aufgabenerfüllung:</strong>
+              <span className="text-slate-700">{testdaf.aufgabenbewaeltigung}</span>
+            </div>
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200 text-sm">
+              <strong className="text-slate-900 block mb-0.5">Argumentation & Datensynthese:</strong>
+              <span className="text-slate-700">{testdaf.argumentation_synthese}</span>
+            </div>
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200 text-sm">
+              <strong className="text-slate-900 block mb-0.5">Wissenschaftssprache:</strong>
+              <span className="text-slate-700">{testdaf.wissenschaftssprache}</span>
             </div>
           </CardContent>
         </Card>

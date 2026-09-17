@@ -71,7 +71,24 @@ export interface DshScoreBreakdown {
   ausdrucksvermoegen: number; // max 20
   kohaesion: number; // max 12
   gesamt_punkte: number; // max 100
-  dsh_stufe: string; // 'DSH 1 (57-66%)', 'DSH 2 (67-81%)', 'DSH 3 (82-100%)', 'Nicht bestanden (<57%)'
+  dsh_stufe: string; // 'DSH 3 (82-100 P.)', 'DSH 2 (67-81 P.)', 'DSH 1 (57-66 P.)', 'Nicht bestanden (<57 P.)'
+}
+
+export interface GoetheScoreBreakdown {
+  teil_punkte_erreicht: number;
+  teil_punkte_maximal: number;
+  aufgabenbewaeltigung: number;
+  kohaerenz: number;
+  wortschatz: number;
+  strukturen: number;
+  bestehen_status: string; // 'Bestanden (≥ 60%)' oder 'Nicht bestanden (< 60%)'
+}
+
+export interface TestDafScoreBreakdown {
+  tdn_stufe: string; // 'TDN 5 (Spitzenniveau)', 'TDN 4 (Hochschulzugang)', 'TDN 3', 'Unter TDN 3'
+  aufgabenbewaeltigung: string;
+  argumentation_synthese: string;
+  wissenschaftssprache: string;
 }
 
 export interface FeedbackData {
@@ -83,6 +100,8 @@ export interface FeedbackData {
   task_fulfillment_score: number; // 1-10
   model_answer: string;
   dsh_breakdown?: DshScoreBreakdown;
+  goethe_breakdown?: GoetheScoreBreakdown;
+  testdaf_breakdown?: TestDafScoreBreakdown;
   exam_specific_feedback?: string;
 }
 

@@ -1,6 +1,5 @@
 import { GoogleGenAI, Type, Schema } from '@google/genai';
 import { FeedbackData } from '@/types';
-import { EXAM_CONFIGS } from '@/lib/examConfig';
 
 const ai = new GoogleGenAI({});
 
@@ -38,6 +37,29 @@ const feedbackSchema: Schema = {
       type: Type.STRING, 
       description: 'Eine vorbildliche Musterlösung, die exakt den Anforderungen und dem Niveau der gewählten Prüfung und des Prüfungsteils entspricht.' 
     },
+    goethe_breakdown: {
+      type: Type.OBJECT,
+      description: "Wird für Goethe A1, A2, B1, B2 ausgefüllt nach dem offiziellen Goethe-Punkte- und Kriterienraster",
+      properties: {
+        teil_punkte_erreicht: { type: Type.INTEGER },
+        teil_punkte_maximal: { type: Type.INTEGER },
+        aufgabenbewaeltigung: { type: Type.INTEGER, description: "Punkte für Aufgabenbewältigung aller Leitpunkte" },
+        kohaerenz: { type: Type.INTEGER, description: "Punkte für Kohärenz & Textverknüpfung" },
+        wortschatz: { type: Type.INTEGER, description: "Punkte für Wortschatzspektrum & Angemessenheit" },
+        strukturen: { type: Type.INTEGER, description: "Punkte für grammatische Strukturen & Korrektheit" },
+        bestehen_status: { type: Type.STRING, description: "z.B. 'Bestanden (≥ 60%)' oder 'Nicht bestanden (< 60%)'" }
+      }
+    },
+    testdaf_breakdown: {
+      type: Type.OBJECT,
+      description: "Wird für den Digitalen TestDaF ausgefüllt (Einstufung nach TDN 3, 4, 5)",
+      properties: {
+        tdn_stufe: { type: Type.STRING, description: "TDN 5 (Spitzenniveau), TDN 4 (Hochschulzugang), TDN 3 (Teilweise ausreichend) oder Unter TDN 3" },
+        aufgabenbewaeltigung: { type: Type.STRING, description: "Bewertung der Vollständigkeit und Argumentation" },
+        argumentation_synthese: { type: Type.STRING, description: "Bewertung der Text- und Grafiksynthese bzw. Pro/Contra-Argumentation" },
+        wissenschaftssprache: { type: Type.STRING, description: "Bewertung des akademischen Stils und Sprachgebrauchs" }
+      }
+    },
     dsh_breakdown: {
       type: Type.OBJECT,
       description: "Wird für die DSH-Prüfung ausgefüllt (Bewertung nach offiziellem DSH-Kriterienkatalog mit 100 Punkten)",
@@ -70,53 +92,60 @@ export async function analyzeExamSubmission(
 ): Promise<FeedbackData> {
   const isDsh = examName.toLowerCase().includes("dsh");
   const isTestDaF = examName.toLowerCase().includes("testdaf");
+  const isGoethe = examName.toLowerCase().includes("goethe");
 
   const prompt = `
-Du bist ein hochqualifizierter Deutschprüfer und beurteilst eine Textproduktion für die offizielle Prüfung:
+Du bist ein zertifizierter Prüfer für offizielle Deutschprüfungen (Goethe-Institut, TestDaF-Institut, DSH-Kommission).
+Bewerte die folgende Textproduktion streng nach den offiziellen Prüfungsrichtlinien und Bewertungsrastern (Barem điểm):
 - Prüfung: ${examName}
 - Prüfungsteil: ${teilTitle}
 - Zielniveau: ${targetLevel}
 - Thema: ${topic}
 - Aufgabenstellung: ${taskInstructions}
 - Leitpunkte / Kriterien: ${requiredPoints.join(" | ")}
-${materials ? `- Vorgegebene Materialien (Lesetext, Grafik, Zitate): ${materials}` : ""}
+${materials ? `- Vorgegebene Materialien: ${materials}` : ""}
 
-Eingereichter Text des Teilnehmers:
+Eingereichter Teilnehmertext:
 """
 ${text}
 """
 
-Deine Aufgaben bei der Bewertung:
-1. Gründliche Fehleranalyse mit Korrekturvorschlägen in folgenden Kategorien:
-   - Grammatik
-   - Wortschatz
-   - Satzbau
-   - Rechtschreibung & Zeichensetzung
-   - Ausdruck (Register und Angemessenheit)
-   - Textstruktur & Kohärenz
-   - Aufgabenbezug (Sind alle Leitpunkte/Vorgaben erfüllt?)
+Offizielle Bewertungsmaßstäbe je nach Prüfung:
+${isDsh ? `
+1. DSH-Prüfungsraster (100 Punkte nach DSH-Rahmenordnung):
+   - Inhalt & Aufgabenstellung: max. 22 Punkte (Einleitung 2 P., Argumentation 16 P., Stellungnahme 4 P.)
+   - Textaufbau & Kohärenz: max. 12 Punkte (Gedankenführung, roter Faden; Abzug -3 P. falls unter 200 Wörtern)
+   - Formale Richtigkeit: max. 30 Punkte (Morphologie, Syntax, Rektion, Tempus, Kongruenz)
+   - Orthographie / Interpunktion: max. 4 Punkte
+   - Ausdrucksvermögen: max. 20 Punkte (differenzierter Wortschatz, treffende Redemittel)
+   - Kohäsion: max. 12 Punkte (Verknüpfungen, Konnektoren)
+   - Gesamtpunktzahl (max. 100 P.) & DSH-Stufe ermitteln:
+     * DSH 3: 82–100 Punkte (≥ 82%)
+     * DSH 2: 67–81 Punkte (≥ 67%)
+     * DSH 1: 57–66 Punkte (≥ 57%)
+     * Nicht bestanden: < 57 Punkte
+   Trage diese Werte vollständig in "dsh_breakdown" ein.
+` : isTestDaF ? `
+1. Digitaler TestDaF Bewertungsmaßstab (TDN 3, 4, 5):
+   - TDN 5: Spitzenniveau, hervorragende Argumentation bzw. Text-/Grafiksynthese, hochkompetente Wissenschaftssprache.
+   - TDN 4: Erfüllt alle Kriterien für den uneingeschränkten Hochschulzugang, klare Begründungen, gute wissenschaftssprachliche Strukturen.
+   - TDN 3: Grundlegende Anforderungen erfüllt, jedoch sprachliche oder argumentative Lücken.
+   - Unter TDN 3: Nicht ausreichend für das Hochschulstudium.
+   Trage diese Einstufung und Bewertungen vollständig in "testdaf_breakdown" ein.
+` : isGoethe ? `
+1. Goethe-Zertifikat Bewertungsmaßstab:
+   - Goethe A1: Teil 1 (max. 5 P. für 5 Lücken), Teil 2 (max. 10 P.: 3 Leitpunkte + Sprache).
+   - Goethe A2: Teil 1 (max. 10 P.: Aufgabenbewältigung 5 P. + Angemessenheit 5 P.), Teil 2 (max. 10 P.).
+   - Goethe B1: Teil 1 (max. 40 P.), Teil 2 (max. 40 P.), Teil 3 (max. 20 P.). Kriterien: Aufgabenbewältigung, Kohärenz, Wortschatz, Strukturen. Bestehensgrenze: 60%.
+   - Goethe B2: Teil 1 (max. 60 P.: 4 Kriterien à 15 P.), Teil 2 (max. 40 P.: 4 Kriterien à 10 P.). Bestehensgrenze: 60%.
+   Trage die erreichten und maximalen Punkte sowie die 4 Kriterien in "goethe_breakdown" ein.
+` : ""}
 
-2. Prüfungsspezifische Rückmeldung:
-   ${isDsh ? `
-   - WICHTIG: Erstelle eine genaue Punkteaufschlüsselung nach dem offiziellen DSH-Bewertungsraster (insgesamt 100 Punkte):
-     * Inhalt & Aufgabenstellung: Nennung des Themas, Einleitung, vollständige Argumentation, fundierte Stellungnahme (max. 22 Punkte)
-     * Textaufbau & Kohärenz: logische Gedankenführung, 'roter Faden', sinnvolle Überleitungen (max. 12 Punkte)
-     * Formale Richtigkeit: Morphologie, Syntax, Rektion, Tempus, Kongruenz (max. 30 Punkte)
-     * Orthographie & Interpunktion: korrekte Rechtschreibung und Kommasetzung (max. 4 Punkte)
-     * Ausdrucksvermögen: treffender wissenschaftssprachlicher Wortschatz und Redemittel (max. 20 Punkte)
-     * Kohäsion: logische Verknüpfungen, Konnektoren, Proformen (max. 12 Punkte)
-     * Ermittle die DSH-Stufe: DSH 3 (82-100 P.), DSH 2 (67-81 P.), DSH 1 (57-66 P.), Nicht bestanden (<57 P.)
-   ` : isTestDaF ? `
-   - Bewerte nach TestDaF-Kriterien: Gesamterfüllung, argumentative Kohärenz, wissenschaftssprachliche Angemessenheit, eigenständige Formulierung (ohne wörtliches Abschreiben). Gib eine Schätzung des TestDaF-Niveaus (TDN 3, TDN 4 oder TDN 5).
-   ` : `
-   - Bewerte nach den offiziellen Goethe-Kriterien für ${examName} (Aufgabenbewältigung aller Leitpunkte, Kohärenz, Wortschatz und grammatische Strukturen).
-   `}
+2. Gründliche Fehleranalyse mit konkreter Korrektur und Erklärung für alle gefundenen Fehler (Grammatik, Wortschatz, Satzbau, Rechtschreibung, Ausdruck).
 
-3. Erstelle eine perfekte, vollständige Musterlösung (model_answer):
-   - Sie muss EXAKT der Aufgabenstellung und dem Zielniveau (${targetLevel}) dieser Prüfung entsprechen.
-   - Weder unterfordern noch mit unpassend schweren Strukturen überfordern.
+3. Eine vorbildliche Musterlösung (model_answer), die dem geforderten Niveau und Prüfungsformat exakt entspricht.
 
-Gib die Antwort ausschließlich im vorgegebenen JSON-Format aus.
+Gib die Antwort ausschließlich als valides JSON aus.
 `;
 
   let lastError: any = null;
